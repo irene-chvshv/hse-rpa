@@ -60,7 +60,7 @@ Topic must be: *"HSE_RPA_{Surname} {Name}"*
 1. Take multiple master thesis topics from hand-written paper \ pdf without text recognition using OCR (topics are not English)
 2. Translate topics to English
 3. Collect resources for each topic
-5. Select topic with most vied resources
+4. Select topic with most available resources
 5. Pack all docs related to the selected topic to the .zip archive and send it by email
 
 
