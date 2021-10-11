@@ -43,7 +43,7 @@ Robot functionality:
 * Get title, author, source, description, number of citations, article file (if available)
 Note, that you need to choose the topic with at least 1 file available for downloading.
 
-The final git repo should contains the following files:
+The final git repo should contain the following files:
 * readme.md with robot description
 * requiremnts.txt
 * robot's python script named "main.py"
