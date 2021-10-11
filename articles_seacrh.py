@@ -56,7 +56,7 @@ for search_link in links_list:
         tmp_info.update({
                         'title': text.split("\n")[0],
                         'date' : text.split("\n")[1],   # TODO: might convert to datetime
-                        'authors': text.split("Authors: \n")[-1].replace("\n","; ")
+                        'authors': text.split("Authors:")[-1].replace("\n","; ")
                         })
 
         # trying to download the article's doc
