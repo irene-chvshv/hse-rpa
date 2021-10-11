@@ -5,7 +5,7 @@
 
 ## ResearchGate robot description
 
-The robot is used to automate the process of ResearchGate literature collection for the user-defined topic. Result of the process is an email with attached excel with info about each found article.
+The robot is used to automate the process of https://www.researchgate.net/ literature collection for the user-defined topic. Result of the process is an email with attached excel with info about each found article.
 
 
 #### Used libraries
@@ -17,11 +17,11 @@ The robot is used to automate the process of ResearchGate literature collection 
 
 #### Algorithm 
 
-1. User define a topic, page quantity, and email for the result email
-2. Robot creates links for each query page
-3. Robot collects links to the article from each page
-4. Robot scraps article's info and download source docs if available
-5. Robot writes all info to excel and send email
+1. User defines a topic, number of pages, and receiver of the resulting email
+2. Robot creates links for each search results page
+3. Robot collects links to the articles from each page
+4. Robot scraps article's info and downloads source docs if available
+5. Robot writes all info to excel and sends email
 
 
 #### How to use
@@ -39,29 +39,27 @@ The robot is used to automate the process of ResearchGate literature collection 
 Write the robot with the same logic for https://www.semanticscholar.org/ website.
 
 Robot functionality:
-* Search by specific topic on the X page
-* Get title, author, source, description, citations count, article file (if available)
-Note, that you need to pick the topic with at least 1 article's docs available.
+* Search articles by specific topic on N pages
+* Get title, author, source, description, number of citations, article file (if available)
+Note, that you need to choose the topic with at least 1 file available for downloading.
 
-The final git repo \ .zip archive should contains the following files:
+The final git repo should contains the following files:
 * readme.md with robot description
 * requiremnts.txt
-* link to the video of robot work (feel free to use [loom](https://www.loom.com/) for recording)
 * robot's python script
+* folder with downloaded articles
+* summary excel with articles info
 * example of result email
+* link to the video of robot working (feel free to use [loom](https://www.loom.com/) for recording)
 
-The link to the github repo \ .zip archive should be send by email to [dmitry.fedorov@mazars.ru](mailto:Dmitry.Fedorov@mazars.ru) with [iurii.piunov@mazars.ru](mailto:iurii.piunov@mazars.ru) in CC.
-Topic must be: *"HSE_RPA_{Surname} {Name}"*
+Without git repo homework is not accepted.
 
 ### Additionaly
 
-**Goal**: seect the master thesis topic with the most resources available 
+**Goal**: select the master thesis topic with the most resources available 
 
 1. Take multiple master thesis topics from hand-written paper \ pdf without text recognition using OCR (topics are not English)
 2. Translate topics to English
 3. Collect resources for each topic
 4. Select topic with most available resources
-5. Pack all docs related to the selected topic to the .zip archive and send it by email
-
-
-Email for questions: [dmitry.fedorov@mazars.ru](mailto:Dmitry.Fedorov@mazars.ru)
+5. Save all docs related to the selected topic to the .zip archive and generate excel with summary
