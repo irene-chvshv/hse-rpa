@@ -46,20 +46,19 @@ Note, that you need to choose the topic with at least 1 file available for downl
 The final git repo should contains the following files:
 * readme.md with robot description
 * requiremnts.txt
-* robot's python script
+* robot's python script named "main.py"
 * folder with downloaded articles
 * summary excel with articles info
-* example of result email
-* link to the video of robot working (feel free to use [loom](https://www.loom.com/) for recording)
+* link to the video of the running robot (feel free to use [loom](https://www.loom.com/) for recording)
 
 Without git repo homework is not accepted.
 
 ### Additionaly
 
-**Goal**: select the master thesis topic with the most resources available 
+**Goal**: Select the Master thesis topic with the biggest number of resources available.
 
-1. Take multiple master thesis topics from hand-written paper \ pdf without text recognition using OCR (topics are not English)
+1. Extract multiple Master thesis topics from image \ pdf (without digital text) using OCR, topics should be not in English. Don't forget to save used image \ pdf to the git repo
 2. Translate topics to English
 3. Collect resources for each topic
-4. Select topic with most available resources
+4. Select topic with the biggest number of resources available
 5. Save all docs related to the selected topic to the .zip archive and generate excel with summary
