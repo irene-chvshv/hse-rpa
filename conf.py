@@ -1,4 +1,4 @@
-query = "RPA impact"
+query = "Secure distributed training"
 num_page = 2
 receiver = "irenchuvasheva@mail.ru"
 

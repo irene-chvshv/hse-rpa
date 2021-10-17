@@ -1,7 +1,11 @@
 ### https://github.com/MazarsLabs/hse-rpa
 
 import os
+import re
+import requests
+import sys
 import pandas as pd
+from pprint import pprint
 from selenium.webdriver.chrome.options import Options
 import selenium.webdriver as webdriver
 import time
@@ -9,7 +13,7 @@ from email.message import EmailMessage
 import smtplib
 from conf import query, num_page, receiver, login, password
 
-query_link = f"https://www.researchgate.net/search/publication?q={query}&page="
+query_link = f"https://www.semanticscholar.org/search?q={query}&sort=relevance&page="
 
 # working paths
 working_dir = os.path.dirname(os.path.realpath(__file__))
@@ -32,45 +36,62 @@ links_list = [query_link + str(page+1) for page in range(num_page)]   # create l
 driver = webdriver.Chrome(executable_path=webdriver_path, options=chrome_options)
 
 final_info = []   # empty dictionary for articles info
+paper_index = 0
 for search_link in links_list:
     # get all links to articles from the page
     driver.get(search_link)
     time.sleep(5)
-    articles = driver.find_elements_by_class_name("nova-legacy-o-stack__item")
     
     articles_links = []
-    for article in articles:
+    for article in driver.find_elements_by_css_selector("a[data-selenium-selector='title-link']"):
         try:
-            link = article.find_element_by_css_selector("a.nova-legacy-e-link.nova-legacy-e-link--color-inherit.nova-legacy-e-link--theme-bare").get_attribute("href")
+            link = article.get_attribute("href")
+            print(link)
             articles_links.append(link)
         except:
             pass
 
     for link in articles_links:
-        # get info of each article 
-        tmp_info = {}
-
         driver.get(link)
-        text = driver.find_element_by_class_name("research-detail-header-section__ie11").text
 
-        tmp_info.update({
-                        'title': text.split("\n")[0],
-                        'date' : text.split("\n")[1],   # TODO: might convert to datetime
-                        'authors': text.split("Authors:")[-1].replace("\n","; ")
-                        })
+        title = driver.find_element_by_css_selector("h1[data-selenium-selector='paper-detail-title']").text
 
-        # trying to download the article's doc
+        author_list = driver.find_element_by_css_selector("span.author-list").text
+
+        elems = driver.find_elements_by_css_selector("span[data-heap-id='paper-meta-journal']")
+        source = elems[0].text if elems else ''
+
+        description = driver.find_element_by_css_selector("meta[name='description']").get_attribute('content')
+
+        elems = driver.find_elements_by_css_selector("a[data-heap-nav='citing-papers']")
+        if elems:
+            n_citations = re.search('^(\d+)', elems[0].text).group(1)
+        else:
+            n_citations = '0'
+
+        paper_index += 1
+        tmp_info = {
+            'title': title,
+            'author_list': author_list,
+            'source': source,
+            'description': description,
+            'n_citations': n_citations,
+        }
+        print(f'[+] Received info about paper "{title}"')
+
         try:
-            initial_dir = os.listdir(folder_for_pdf)
-            driver.find_element_by_css_selector("span.nova-legacy-c-button__label.gtm-download-fulltext-btn-header").click()
-            time.sleep(5)
+            url = driver.find_element_by_css_selector("a[data-selenium-selector='paper-link']").get_attribute("href")
+            r = requests.get(url)
+            r.raise_for_status()
+            if 'application/pdf' not in r.headers.get('content-type'):
+                raise ValueError('Not a pdf')
 
-            current_dir = os.listdir(folder_for_pdf)
-            filename = list(set(current_dir) - set(initial_dir))[0]
-            full_path = os.path.join(folder_for_pdf, filename)
-
-        except Exception as e:
-            full_path = None
+            full_path = os.path.join(folder_for_pdf, 'paper{}.pdf'.format(paper_index))
+            with open(full_path, 'wb') as f:
+                f.write(r.content)
+            print(f'    Saved to "{full_path}"')
+        except Exception:
+            full_path = ''
 
         tmp_info.update({'path_to_file':full_path})
 
@@ -96,6 +117,13 @@ with open(excel_path, 'rb') as f:
     file_data = f.read()
     file_name = f'articles_info.xlsx'
 mail.add_attachment(file_data, maintype='application', subtype='octet-stream', filename=file_name)
+
+for item in final_info:
+    file_name = item['path_to_file']
+    if file_name:
+        with open(file_name, 'rb') as f:
+            file_data = f.read()
+        mail.add_attachment(file_data, maintype='application', subtype='octet-stream', filename=file_name)
 
 # send email
 server = smtplib.SMTP('smtp.office365.com')  
