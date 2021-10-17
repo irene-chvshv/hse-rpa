@@ -5,17 +5,16 @@ import pandas as pd
 from selenium.webdriver.chrome.options import Options
 import selenium.webdriver as webdriver
 import time
-from wcm import get_credentials
 from email.message import EmailMessage
 import smtplib
-from conf import query, num_page, receiver
+from conf import query, num_page, receiver, login, password
 
 query_link = f"https://www.researchgate.net/search/publication?q={query}&page="
 
 # working paths
 working_dir = os.path.dirname(os.path.realpath(__file__))
 folder_for_pdf = os.path.join(working_dir, "articles")
-webdriver_path = os.path.join(working_dir, "chromedriver")   # proper version https://chromedriver.chromium.org/
+webdriver_path = "/usr/local/bin/chromedriver"   # proper version https://chromedriver.chromium.org/
 
 # chek if articles directory is exist and create if not
 if not os.path.isdir(folder_for_pdf):
@@ -23,13 +22,14 @@ if not os.path.isdir(folder_for_pdf):
 
 # webdriver
 chrome_options = Options()
+chrome_options.binary_location = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 prefs = {"download.default_directory": folder_for_pdf, "download.prompt_for_download": False}
 chrome_options.add_experimental_option('prefs', prefs)
 os.environ["webdriver.chrome.driver"] = webdriver_path   # 'webdriver' executable needs to be in PATH. Please see https://sites.google.com/a/chromium.org/chromedriver/home
 
 links_list = [query_link + str(page+1) for page in range(num_page)]   # create links to follow
 
-driver = webdriver.Chrome(executable_path=webdriver_path, chrome_options=chrome_options)
+driver = webdriver.Chrome(executable_path=webdriver_path, options=chrome_options)
 
 final_info = []   # empty dictionary for articles info
 for search_link in links_list:
@@ -85,7 +85,6 @@ excel_path = os.path.join(working_dir, "data.xlsx")
 df.to_excel(excel_path, index=False)
 
 # create email
-login, password = get_credentials("HSE")   # could be setup manually
 mail = EmailMessage()
 mail['From'] = login
 mail['To'] = receiver

@@ -1,3 +1,6 @@
 query = "RPA impact"
 num_page = 2
-receiver = "Dmitry.Fedorov@mazars.ru"
+receiver = "irenchuvasheva@mail.ru"
+
+login = "iyuchuvasheva@edu.hse.ru"
+password = ""
